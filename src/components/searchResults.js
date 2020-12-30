@@ -4,7 +4,6 @@ import { Typography, List, ListItem, Grid } from '@material-ui/core';
 
 import axios from "axios";
 
-import InDepth from "./temporary"
 import PersonInfo from "./personInfo"
 const useStyles = makeStyles(theme => ({
   searchResultsRoot: {
@@ -64,7 +63,6 @@ function SearchResults({displayResults, setDisplayResults, rep, st}) {
       return (          
       <ListItem key={index} className={classes.listItem}>
         <Typography className="hover-link" color='primary' onClick={() => {if (selectedPerson.name === person.name) {setSelectedPerson(defaultState)} else {setSelectedPerson(person)}}}>{person.name}</Typography>
-        {/* <InDepth person={person}></InDepth> */}
       </ListItem>
       )
     })

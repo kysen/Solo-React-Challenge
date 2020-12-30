@@ -1,12 +1,12 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Typography, Button } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 
 
 import RepOrSen from "./rep-or-sen"
 import WhichState from "./which-state"
 
-import SearchResults from "../views/SearchResults"
+import SearchResults from "./searchResults"
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,6 +25,8 @@ const useStyles = makeStyles(theme => ({
 function Representative() {
   const classes = useStyles();
 
+  const [displayResults, setDisplayResults] = React.useState(false)
+
   // representative or senator
   const [rep, setRep] = React.useState('');
   const handleSelectorChange = (event) => {
@@ -40,9 +42,6 @@ function Representative() {
     setSt(event.target.value);
   };
 
-  // modal
-  const [open, setOpen] = React.useState(false);
-
   const handleSubmit = () => {
     if (rep === '') {
       setRepEmpty(true)
@@ -51,13 +50,12 @@ function Representative() {
     } else {
       setRepEmpty(false)
       setStEmpty(false)
-      setOpen(true)
+      setDisplayResults(true)
     }
   }
 
   return (
     <div className={classes.root}>
-      <Container >
         <Typography className={classes.title} color="primary" variant="h5" align='left'>
           Who's My Representative?
         </Typography>
@@ -70,14 +68,12 @@ function Representative() {
           Submit
         </Button>
         <SearchResults 
-          open={open}
-          close={() => setOpen(false)}
-          setOpen={setOpen}
+          displayResults={displayResults}
+          setDisplayResults={setDisplayResults}
           rep={rep}
           st={st}
         />
 
-      </Container>
     </div>
   )
 }

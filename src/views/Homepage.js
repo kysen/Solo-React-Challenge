@@ -4,12 +4,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import Representative from "../components/representative"
 
 const useStyles = makeStyles(theme => ({
-  root: {
+  homepageRoot: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
-    height: "100vh"
+    paddingTop: "20px"
+    // width: "100%"
   },
 }));
 
@@ -17,7 +18,7 @@ function Homepage() {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <div className={classes.homepageRoot}>
       <Representative />
     </div>
   )

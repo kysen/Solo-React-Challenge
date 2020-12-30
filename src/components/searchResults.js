@@ -1,13 +1,21 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import { Typography, List, ListItem, Grid } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
 
 import axios from "axios";
 
-import InDepth from "../components/in-depth"
+import InDepth from "./temporary"
+import PersonInfo from "./personInfo"
 const useStyles = makeStyles(theme => ({
+  searchResultsRoot: {
+  },
+  gridItem: {
+    paddingTop: "20px"
+  },
+  peopleContainer: {
+    maxHeight: "40vh",
+    overflow: "auto"
+  },
   list: {
     borderTop: "2px solid #f0f0f0"
   },
@@ -20,12 +28,23 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-function SearchResults({open, close, setOpen, rep, st}) {
+function SearchResults({displayResults, setDisplayResults, rep, st}) {
   const classes = useStyles();
-  
+  const defaultState = {
+    name: 'Name',
+    state: 'State',
+    party: 'Party',
+    district: 'District',
+    phone: 'Phone',
+    office: 'Office',
+    link: 'Website',
+  }
   const [data, setData] = React.useState([])
+  const [selectedPerson, setSelectedPerson] = React.useState(defaultState)
   
   React.useEffect(() =>{
+    setSelectedPerson(defaultState)
+    setDisplayResults(false)
     if (rep && st) {
 
       async function fetchData() {
@@ -33,7 +52,6 @@ function SearchResults({open, close, setOpen, rep, st}) {
           `http://localhost:3000/${rep === 'reps' ? 'representatives' : 'senators'}/${st}`,
           );
           
-          console.log(result.data.results)
           setData(result.data.results)
         };
         
@@ -45,7 +63,8 @@ function SearchResults({open, close, setOpen, rep, st}) {
     return data.map((person, index) => {
       return (          
       <ListItem key={index} className={classes.listItem}>
-        <InDepth person={person}></InDepth>
+        <Typography className="hover-link" color='primary' onClick={() => {if (selectedPerson.name === person.name) {setSelectedPerson(defaultState)} else {setSelectedPerson(person)}}}>{person.name}</Typography>
+        {/* <InDepth person={person}></InDepth> */}
       </ListItem>
       )
     })
@@ -63,22 +82,13 @@ function SearchResults({open, close, setOpen, rep, st}) {
   };
   
   return (
-    <div 
-      className='modal-root'
-      style={open ? {} : { display: "none" }}
-    >
-  
-     <div className="modal-div">
-      <div className="close-icon-container">
-        <CloseIcon className="close-icon" style={{ color: '#f0f0f0', fontSize: 50}} onClick={close}></CloseIcon>
-      </div>
-      <Paper className='modal-paper' onClick={() => setOpen(true)}>
+    <Grid container className={classes.searchResultsRoot} style={{display: displayResults ? "block" : "none"}}>
+      <Grid item className={classes.gridItem}>
         <div className={classes.subTitle}>
           <Typography variant='h5' >List / </Typography>
           <Typography color="primary" variant="h5" style={{marginLeft: "8px"}}>{rep === 'reps' ? 'Representatives' : "Senators"}</Typography>
         </div>
-        <Grid container>
-
+        <Grid container className={classes.peopleContainer}>
           <Grid item xs={8}>
             <List className={classes.list} disablePadding>
               <ListItem className={classes.listItem} style={{backgroundColor: "#f0f0f0"}}>
@@ -98,9 +108,14 @@ function SearchResults({open, close, setOpen, rep, st}) {
           </Grid>
 
         </Grid>
-      </Paper>
-      </div>
-    </div>
+      </Grid>
+      <Grid item className={classes.gridItem}>
+        <div className={classes.subTitle}>
+          <Typography variant='h5' >Info </Typography>
+        </div>
+        <PersonInfo person={selectedPerson}/>
+      </Grid>
+    </Grid>
   )
 }
 
